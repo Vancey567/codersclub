@@ -1,0 +1,24 @@
+.button {
+    background: #0077ff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto; /*To bring the button in the center*/
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #014a9c;
+}
+
+.arrow {
+    margin: 0 0 0 10px;
+}
