@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom'; //useHistory is a hook used for redirect/route
+import { useHistory } from 'react-router-dom'; //useHistory is a hook used for redirect/route
 import styles from './Home.module.css';
 
 import Card from '../../components/shared/Card/Card'
@@ -8,12 +8,12 @@ import Button from '../../components/shared/Button/Button'
 
 const Home = () => {
 
-    const signInLinkStyle = {
-        color: '#0077ff',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-        marginLeft: '10px'
-    };
+    // const signInLinkStyle = {
+    //     color: '#0077ff',
+    //     fontWeight: 'bold',
+    //     textDecoration: 'none',
+    //     marginLeft: '10px'
+    // };
 
     const history = useHistory(); // useHistory is a hook used for redirect/route
 

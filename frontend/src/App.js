@@ -38,7 +38,6 @@ function App() {
           <Authenticate />
         </Route> */}
 
-
       </Switch>
     </BrowserRouter> 
   );
@@ -48,7 +47,6 @@ function App() {
 // guestRoute is also a Route component but here we have te freedom of applying checks here. like the user is loggedIn or not etc. Which section you want to show and where to redirect will be done here. 
 const GuestRoute = ({children, ...rest}) => { //object destructuring. All the props passed here will be received in rest.
   const { isAuth } = useSelector((state) => state.auth);
-
   return (
     <Route {...rest} 
       render = {({location}) => {
@@ -70,6 +68,7 @@ const GuestRoute = ({children, ...rest}) => { //object destructuring. All the pr
 // For User is loggedIn but not activated(Full name and profile picture is not uploaded ) then what to do? We want to show the stepAvatar children and 
 const SemiProtectedRoute = ({children, ...rest}) => {
   const { user, isAuth } = useSelector((state) => state.auth);
+
   return (
     <Route {...rest}
       render = {({ location }) =>{

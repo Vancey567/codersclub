@@ -3,7 +3,7 @@ import Card from '../../../../components/shared/Card/Card';
 import Button from '../../../../components/shared/Button/Button';
 import TextInput from '../../../../components/shared/TextInput/TextInput';
 import { sendOtp } from '../../../../http/index';// Since we have exported only the otp endpoint and not the export default the entire file module there for we need to import the function inside {  }  
-import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux'; // 
 import { setOtp } from '../../../../store/authSlice';// Since we have exported only the otp endpoint and not the export default the entire file module there for we need to import the function inside {  }  
 
 import styles from './Phone.module.css';
@@ -17,17 +17,15 @@ const Phone = ({ onNext }) => {
     async function submit() {
         // Before calling the onNext we need to make and complete the server request
         // To make a server request we need to use axios or JS inbuilt Fetch API
-        const { data } = await sendOtp({ phone: phoneNumber });
+        const { data } = await sendOtp({ phone: phoneNumber }); // receiving the data from the server
         console.log(data);
         // Using the dispatcher to dispatch the data from one page to another
         dispatch(
             setOtp({ // setOtp is the action that we have imported from authSlice.js inside the reducers. We are calling that action and passing the data from here to the store where we will be storing the data inside setOtp.
-                phone: data.phoneNumber, // passing the data to setOtp inside authSlice.js
+                phone: data.phone, // passing the data to setOtp inside authSlice.js. These data will be available to us inside action.payload payload has the data
                 hash: data.hash
             })
         );
-            
-
         onNext();
     }
  

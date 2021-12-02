@@ -26,7 +26,7 @@ export const authSlice = createSlice({
     // Another action
     setOtp: (state, action) => {
       const { phone, hash } = action.payload; // payload has the data that is being passed from the dispatch sendOtp section of phone.jsx. We are destructuring it and storing it inside phone, hash.
-      console.log(`athSlice Phone: ${phone}, hash: ${hash}`);
+      // console.log(`athSlice Phone: ${phone}, hash: ${hash}`);
       // Setting the data we received in payload to the initial state.
       state.otp.phone = phone; // state has the initial state.
       state.otp.hash = hash;
@@ -37,7 +37,7 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setAuth, setOtp } = authSlice.actions // We need to export the action or reducer from here
 
-export default authSlice.reducer
+export default authSlice.reducer // Export the reducer slice
 
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
