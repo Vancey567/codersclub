@@ -25,12 +25,12 @@ class AuthController {
         const expires = Date.now() + ttl;// It will give the time when it will expire. Current time se 2 minute baad expire ho jayega OTP 
         const data = `${phone}.${otp}.${expires}`; // We aren't only hasing the otp but generating a new data using phone, random otp and expires time and then we are hasing it so that hash become a little unique 
         
+        // Why hashed expire 05.17:00min
         const hash = hashService.hashOtp(data); // We are calling hashService class and inside that we have a method which takes otp and hash that otp
 
         // To send messages for OTP we will use a service called Twilio.
         try {
             // await otpService.sendBySms(phone, otp); // Pass phone and normal otp for sending to the user not the hashed otp
-            
             res.json({
                 hash: `${hash}.${expires}`, // We will send a hash. The expires time will be extracted
                 phone: phone,
@@ -85,8 +85,15 @@ class AuthController {
 
 
         // Generate JWT token
-        const { accessToken, refreshToken } = tokenService.generateTokens({ _id: user._id, activated: false }); // this will give us the returned object with two values which can be extracted using the object  destructuring.
-        console.log(`accessToken: ${accessToken}, refreshToken: ${refreshToken}`);
+        const { accessToken, refreshToken } = tokenService.generateTokens({ // this will give us the returned object with two values which can be extracted using the object  destructuring.
+            _id: user._id,
+            activated: false 
+        }); 
+
+        // Before storing the refresh token into the cookie we will the refresh token in the DB
+        await tokenService.storeRefreshToken(refreshToken, user._id)
+
+        // console.log(`accessToken: ${accessToken}, refreshToken: ${refreshToken}`);
         // Now we will attach this refreshToken to the cookie which will be http only i.e client pe hamara JS read nahi kar payega.
         // Cookie feature is that it gets attach to request on every request. So we don't need to send the refreshToken on every request manually if we store it inside the cookie. Our frontend will automatically send the refreshToken on every request with the cookie.
         // Many a times accessToken are also stored in the cookie.
@@ -98,12 +105,18 @@ class AuthController {
             httpOnly: true, // this is the type of the cookie.
         }) 
 
+        // We will not store our accessToken inside our local storage cuz when the access attacks are performed then the AccessToken might get compromised from localStorage.
+        // That's why we will store the accessToken inside our cookie. And because of this our client JS code will not be able to read the accessToken.
+        res.cookie('accessToken', accessToken, { // first 'refreshToken' is the name of the cookie and second refreshToken is the actual refreshToken data
+            maxAge: 1000 * 60 * 60 * 24 * 30, // valid for 30 days 
+            httpOnly: true, // this is the type of the cookie.
+        })
+
         // Create object of the UserDto class. THis will return the class object having the property as id, phone, activated, createdAt
         // We will get only those data which we want and have created inside the class by passing it as response.
         const userDto = new UserDto(user);
-
-
-        res.json({ accessToken, user: userDto });
+        // res.json({ accessToken, user: userDto });
+        res.json({ user: userDto, auth: true }); // now we will not send the accessToken to the client instead we will send a flag created by us called auth as true. That will tell that the client is authenticated.
     }
 }
 
