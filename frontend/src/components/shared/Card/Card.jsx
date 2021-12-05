@@ -6,8 +6,8 @@ const Card = ({title, icon, children}) => { // children is a special prop which 
     return (
         <div className={styles.card}>
             <div className={styles.headingWrapper}>
-                <img src={`/images/${icon}.png`} alt={`${icon}`} />
-                <h1 className={styles.heading}>{title}</h1>
+                { icon && <img src={`/images/${icon}.png`} alt={`${icon}`} /> } {/* If the icon has beed passed then only show the image else don't show it */}
+                { title && <h1 className={styles.heading}>{title}</h1> }
             </div>
             {children} {/* Inject the data inside the children here*/}
             

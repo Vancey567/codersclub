@@ -60,8 +60,12 @@ img{
 
 
 html {
-    box-sizing: border-box;
     font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+
 }
 
 body,
@@ -78,6 +82,13 @@ ul {
 	padding: 0;
     font-weight: normal;
     -webkit-font-smoothing: antialiased;
+}
+
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 body {

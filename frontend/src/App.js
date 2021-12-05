@@ -7,10 +7,19 @@ import Authenticate from './pages/Authenticate/Authenticate';
 import Activate from './pages/Activate/Activate';
 import Rooms from './pages/Rooms/Rooms';
 import { useSelector } from 'react-redux';
-// Checking
+import Loader from './components/shared/Loader/Loader';
+
+// Custom hooks
+import { useLoadingWithRefresh } from './hooks/useLoadingWithRefresh';
+
 
 function App() {
-  return (
+  // call refresh endpoint on page refresh by calling the custom hook
+  const { loading } = useLoadingWithRefresh(); // call the hook and this hook is returning a object. Get the key by destructuring it and use it. And If the loading is true it will show the loading component else it will hide the loading component  
+
+  return loading ? ( // If the loading is true then the loading component will be shown else other componnet will be shown.
+    <Loader message="Loading Please wait"/>
+  ) : (
     <BrowserRouter> {/* Creating Router, BrowserRouter is present in react-router-dom library and we import it here*/} 
 
       <Navigation />  {/* Since Navigation is kept outside of <Switch> therefore it can be applied to all the pages/routes */}

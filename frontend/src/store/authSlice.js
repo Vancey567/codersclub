@@ -20,7 +20,11 @@ export const authSlice = createSlice({
       // To so that we use some hooks of react
       const { user } = action.payload;
       state.user = user;
-      state.isAuth = true;
+      if(user === null) { // no user set authenticated as false
+        state.isAuth = false;
+      } else { // if there exist a user then set authenticated as true 
+        state.isAuth = true;
+      }
     },
 
     // Another action

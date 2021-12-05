@@ -16,7 +16,6 @@ class ActivateController {
         // For this we use node core module.(Buffer)
         // We will convert the base64 image in nodejs buffer first
         const buffer = Buffer.from( // first we will pass the base64 image but we need to split something like data:image\/png;base64, with empty string ''. Second the base64 is the encoding. 
-            // avatar.replace(/^data:image\/png;base64,/,''),
             avatar.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
             'base64'
         );

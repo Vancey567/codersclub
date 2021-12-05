@@ -10,6 +10,8 @@ const authMiddleware = require('./middlewares/auth-middleware');
 router.post('/api/send-otp', authController.sendOtp);
 router.post('/api/verify-otp', authController.verifyOtp);
 router.post('/api/activate', authMiddleware, activateController.activate);// This route should be protected cuz the user is already logggedIn onto the client.It has accessToken, refreshToken. So we allow on this route who have valid accesstoken and refreshToken. For that we will create a middleware to verify the token. If the token is valid we will continue the request to the next else we will give a response to the user to enter valid credentials
+router.get('/api/refresh', authController.refresh);
+router.post('/api/logout', authMiddleware, authController.logout);
 
 
 module.exports = router;

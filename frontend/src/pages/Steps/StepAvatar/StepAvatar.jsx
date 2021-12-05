@@ -1,29 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Card from '../../../components/shared/Card/Card'
 import Button from '../../../components/shared/Button/Button'
 import { setAvatar } from '../../../store/activateSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { activate } from '../../../http'
 import { setAuth } from '../../../store/authSlice' 
-
+import Loader from '../../../components/shared/Loader/Loader' 
 import styles from './StepAvatar.module.css'
  
-const StepAvatar = ({onNext}) => {
+const StepAvatar = () => {
     const dispatch = useDispatch();
     const { name, avatar } = useSelector((state) => state.activate);
     const [image, setImage] = useState('/images/monkey-avatar.png');
     
-    async function submit() {
-        try {
-            const { data } = await activate({ name, avatar }); // we will send the data and avatar to the server post url
-            if(data.auth) { // if it is true that is the user is avtivated then
-                dispatch(setAuth(data))
-            }
-            console.log(data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    const [loading, setLoading] = useState(false);
+    const [unMounted, setUnMounted] = useState(false);
+
 
     function captureImage(e) {
         const file = e.target.files[0]; // This will give us the file at 0th index inside the target when we choose a file
@@ -36,6 +28,33 @@ const StepAvatar = ({onNext}) => {
         }
         // Now we have the name and userImage the user so now we need to create a route to post these data on the server on click of next button. And we need to make the activate field as true cuz the user is activated now
     }
+
+    async function submit() {
+        if( !name || !avatar ) return;
+        // Here we will apply loader. When we submit our image a request will go on the server then we will apply loading animation and when the request is complete we will remove the loading animation.
+        setLoading(true);       
+        try {
+            const { data } = await activate({ name, avatar }); // we will send the data and avatar to the server post url
+            if(data.auth) { // if it is true that is the user is avtivated then
+                if(!unMounted) {
+                    dispatch(setAuth(data))
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        } finally { // instead of writing setLoading(false); in both try and catch we can simply write it inside finally. It runs even when the try {} completes execution or when there's some error.
+            setLoading(false); // remove the loading animation
+        }
+    }
+
+    useEffect(() => {
+        return () => {
+            setUnMounted(true);
+        };
+    }, []);
+
+    // Initially we have a loading state which is false, so when this component setAvatar will load the Loader component will not be rendered first. Then when we submit the image the request will be done on the server and the setLoading() will become true rendring the loading component. And when the request is complete our finally block will be called and setState will become false.
+    if(loading) return <Loader message="Activation in progress..." />
     
     return (
         <>

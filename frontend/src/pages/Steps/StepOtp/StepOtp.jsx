@@ -22,7 +22,7 @@ const StepOtp = () => { // removed from function: { onNext }
     async function submit() {
         // We need to make a request from here to send the OTP + HASH to the server. to verify Our OTP. Whose route we have created in our backend "verify-otp"
         // Since this is a server request then it's a good practice to keep the code inside try catch block and handle the errors that can possibly occur
-        // if (!otp || !phone || !hash) return;
+        if (!otp || !phone || !hash) return;
         try {
             // We will be passing the otp which is stored in our local state, phone and hash which are stored in our "Store". 
             // We need to fetch our store here that we have created using redux-toolkit. To fetch the "store" here we need to import a hook named useSelector which is inside react-redux.

@@ -17,6 +17,7 @@ const Phone = ({ onNext }) => {
     async function submit() {
         // Before calling the onNext we need to make and complete the server request
         // To make a server request we need to use axios or JS inbuilt Fetch API
+        if(!phoneNumber) return;
         const { data } = await sendOtp({ phone: phoneNumber }); // receiving the data from the server
         console.log(data);
         // Using the dispatcher to dispatch the data from one page to another

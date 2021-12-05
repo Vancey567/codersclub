@@ -44,7 +44,6 @@ class AuthController {
         res.json({hash: hash}); // We will send hash on to the client
     }
 
-
     async verifyOtp(req, res) {
         // Logic to veryfy OTP
         const { otp, hash, phone } = req.body;
@@ -118,9 +117,81 @@ class AuthController {
         // res.json({ accessToken, user: userDto });
         res.json({ user: userDto, auth: true }); // now we will not send the accessToken to the client instead we will send a flag created by us called auth as true. That will tell that the client is authenticated.
     }
+
+    async refresh(req, res) {
+        // 1. Get refresh token from header
+        const {  refreshToken: refreshTokenFromCookie } = req.cookies; // refreshTokenFromCookie is a alias for refreshToken to avoaid name conflict
+
+        // 2. Check if token is valid
+        let userData;
+        try {
+            userData = await tokenService.verifyRefreshToken(refreshTokenFromCookie);
+        } catch(err) {
+            console.log(err);
+            return res.status(401).json({ message: "Invalid token" });
+        }
+
+        // 3. Check if the refresh token exist in our DB.
+        try {
+            const token = await tokenService.findRefreshToken(userData._id, refreshTokenFromCookie);
+            if(!token) {
+                return res.status(401).json({ message: "Token does't exists in DB" });
+            }
+        } catch(err) {
+            console.log(err);
+            return res.status(500).json({ message: "Internal Error" });
+        }
+
+        // 4. Check if valid user. // If the refreshToken has the user but our Db don't then
+        const user = await userService.findUser({ _id: userData._id });
+        if(!user) {
+            return res.status(404).json({ message: "No User"});
+        }
+
+        // 5. Generate both the tokens if everything is fine
+        const { refreshToken, accessToken } = tokenService.generateTokens({ _id: userData._id });
+
+        // 6. update refreshToken. Since we have created the new refreshToken now we need to update the refreshToken in our DB newly created token.
+        try {
+            await tokenService.updateRefreshToken(userData._id, refreshToken)
+        } catch(err) {
+            console.log(err);
+            return res.status(500).json({ message: "Internal error"});
+        }
+
+        // 7. Store these tokens inside the cookie
+        // Creating cookkie
+        res.cookie('refreshToken', refreshToken, { 
+            maxAge: 1000 * 60 * 60 * 24 * 30, 
+            httpOnly: true, // this is the type of the cookie.
+        }) 
+
+        res.cookie('accessToken', accessToken, { 
+            maxAge: 1000 * 60 * 60 * 24 * 30, 
+            httpOnly: true,
+        })
+
+        // 8. send Response on the client.
+        const userDto = new UserDto(user);
+        res.json({ user: userDto, auth: true });
+    }
+
+    async logout(req, res) {
+        // 1. Get the refreshToken of the user to be loggedOut. refreshToken is indide cookie so destructure it and take it.
+        const { refreshToken } = req.cookies;
+
+        // 2. delete that refreshToken from DB
+        await tokenService.deleteRefreshToken(refreshToken);
+
+        // 3. delete that cookies from DB
+        res.clearCookie('refreshToken'); // res has this clearCookie() method inside which we need to pass the key of the cookie(here refreshToken and accessToken) to clear/delete the cookkie
+        res.clearCookie('accessToken');
+    
+        res.json({ user: null, auth: false }); // now we will send the user as null(since no user) and make the auth as false (not authenticted);
+    }
 }
 
 
 // We will export the class not by giving reference but by creating object using new keyword. We are exporting the object and this pattern is called "Singleton Pattern"
-// Singleton Pattern: Means whenever we require this AuthController class we will "get the same object" instead of creating a new object evertime we require the class. 
+// Singleton Pattern: Means whenever we require this AuthController class we will "get the same object" instead of creating a new object evertime we require the class. We will receive this res on our frontend(Navigation.jsx) where we will set the user inside the state as null and isAuth as false inside the "Store's setAuth slice" 
 module.exports = new AuthController();

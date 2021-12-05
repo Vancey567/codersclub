@@ -1,8 +1,33 @@
 .navbar {
     padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
+.navRight {
+    display: flex;
+    align-items: center;
 
+}
+
+.logoutButton {
+    background: none;
+    
+}
+
+.logoutButton:hover {
+    background-color: none !important;
+    cursor: pointer;
+}
+
+.avatar {
+    border-radius: 50%;
+    object-fit: cover; /* SO that our img don't stretch and our we maintain our aspect retion*/
+    border: 3px solid #0077ff;
+    margin: 0 20px;
+    margin-right: 10px;
+}
 
 
 

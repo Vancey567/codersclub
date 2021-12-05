@@ -6,9 +6,9 @@ const TextInput = (props) => {
         <div>
             <input 
                 className={styles.input} 
-                // style={{
-                //     width: props.fullwidth === 'true' ? '100%' : 'inherit',
-                // }} 
+                style={{
+                    width: props.fullwidth === 'true' ? '100%' : 'inherit',
+                }} 
                 type="text" 
                 {...props} /> {/* All the passed prop will be spread and applied here.*/}
         </div>
