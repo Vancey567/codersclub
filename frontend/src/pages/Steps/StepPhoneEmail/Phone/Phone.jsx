@@ -37,7 +37,7 @@ const Phone = ({ onNext }) => {
                 <div className={styles.actionButtonWrap}>
                     <Button text="Next" onClick={ submit }/> {/* When we click on the onNext button we will be redirected to our OTP page. For that first we need to make a server request and after we receive the response then we need to call the onNext Button */}
                 </div>
-                <p className={styles.bottomParagraph}>By entringing your number, you're agreeing to our Terms of service and Privacy Policy. Thanks!</p>
+                <p className={styles.bottomParagraph}>By entering your number, you're agreeing to our Terms of service and Privacy Policy. <span>Thanks!</span></p>
             </div>
         </Card>
     );

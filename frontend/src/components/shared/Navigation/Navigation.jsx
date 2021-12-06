@@ -46,9 +46,15 @@ const Navigation = () => {
 
             {isAuth && 
                 <div className={styles.navRight}>
-                    <h3>{user.name}</h3>
+                    <h3>{user?.name}</h3> {/* When the user is not loggedIn don't show the user name error corrected. And If the user is loogedIn But it don't have the name given yet don't show it then*/}
                     <Link to="/">
-                        <img className={styles.avatar} src={user.avatar} width="40" height="40" alt="avatar" />
+                        <img 
+                            className={styles.avatar} 
+                            src={user.avatar ? user.avatar : '/images/monkey-avatar.png'} 
+                            width="40" 
+                            height="40" 
+                            alt="avatar" 
+                        />
                     </Link>
                     <button className={styles.logoutButton} onClick={logoutUser}>
                         <img src="/images/logout.png" alt="logout" />

@@ -6,6 +6,7 @@ import Home from './pages/Home/Home';
 import Authenticate from './pages/Authenticate/Authenticate';
 import Activate from './pages/Activate/Activate';
 import Rooms from './pages/Rooms/Rooms';
+import Room from './pages/Room/Room'; // single page room
 import { useSelector } from 'react-redux';
 import Loader from './components/shared/Loader/Loader';
 
@@ -40,6 +41,10 @@ function App() {
 
         <ProtectedRoute path="/rooms">
           <Rooms />
+        </ProtectedRoute>
+
+        <ProtectedRoute path="/room/:id"> {/* From addRoomModal, room will be static but id will be changing dynamically*/}
+          <Room />
         </ProtectedRoute>
 
 

@@ -1,11 +1,26 @@
-import React, { useState } from 'react'
-import styles from './AddRoomModal.module.css'
-import TextInput from '../shared/TextInput/TextInput'
-
+import React, { useState } from 'react';
+import styles from './AddRoomModal.module.css';
+import TextInput from '../shared/TextInput/TextInput';
+import { createRoom as create } from '../../http'; // as give a alias name for createRoom as create. Or it will have a name conflict with the function named createRoom as well 
+import { useHistory } from 'react-router-dom'
 
 const AddRoomModal = ({ onClose }) => {
+    const history = useHistory();
+
     const [roomType, setRoomType] = useState('open'); // selcect room type
     const [topic, setTopic] = useState(''); // Write the topic to be discussed
+
+    async function createRoom() {
+        // Server call
+        try {
+            if(!topic) return; // If someone clicks on the topic button even if they have not written a topic then a empty string will go onto the server. But this will avoid it to do so
+            const { data } = await create({ topic, roomType });
+            history.push(`/room/${data.id}`);// We will redirect to single room page using the single useHistory hook. Inside it we will push our new url for the new room using the rooms uniqe id. But before redirecting we need to register this route in our app.js
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
 
     return (
         <div className={styles.modalMask}>
@@ -15,7 +30,7 @@ const AddRoomModal = ({ onClose }) => {
                 </button>
                 <div className={styles.modalHeader}>
                     <h3 className={styles.heading}>Enter the topic to be discussed</h3>
-                    <TextInput fullwidth={ 'true' } value={ topic } onChange={(e) => setTopic(e.target.value)}/>
+                    <TextInput fullwidth={ 'true' } value={ topic } onChange={(e) => setTopic(e.target.value)}/> {/* What ever we type will be set inside the setTopic local state*/}
                     <h2 className={styles.subHeading}>Room types</h2>
                     <div className={styles.roomTypes}>
                         <div 
@@ -46,7 +61,11 @@ const AddRoomModal = ({ onClose }) => {
                 </div>
                 <div className={styles.modalFooter}>
                     <h2>Start a room, open to everyone</h2>
-                    <button className={styles.footerButton}><img src="/images/celebration.png" alt="celebration" />
+                    <button 
+                        onClick={createRoom}
+                        className={styles.footerButton}
+                    >
+                        <img src="/images/celebration.png" alt="celebration" />
                         <span>Let's go</span>
                     </button>
                 </div>

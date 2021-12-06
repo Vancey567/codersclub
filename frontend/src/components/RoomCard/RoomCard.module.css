@@ -47,3 +47,12 @@
     font-weight: bold;
     margin-right: 5px;
 }
+
+
+.singleSpeaker .avatars img {
+    position: initial; /*Default position will be applied and absolute will be removed*/
+}
+
+.singleSpeaker .names{
+    margin-left: 20px;
+}

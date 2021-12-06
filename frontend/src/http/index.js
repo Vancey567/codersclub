@@ -19,7 +19,8 @@ export const sendOtp = (data) => api.post('/api/send-otp', data); // Since it a 
 export const verifyOtp = (data) => api.post('/api/verify-otp', data); // Take the data and verify the otp
 export const activate = (data) => api.post('/api/activate', data); // once the user has given it's name and the profile image upload those on the server using this url
 export const logout = () => api.post('/api/logout'); // once the user has given it's name and the profile image upload those on the server using this url
-
+export const createRoom = (data) => api.post('/api/rooms', data); // create a room
+export const getAllRooms = () => api.get('/api/rooms'); // create a room
 
 
 
