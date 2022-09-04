@@ -1,5 +1,6 @@
 // We need to create a instance using which we will do our interceptors work.
-// All endpoints in our application will be kept here and then we will export it from here.This will bundle all the endpoints at one point here and in furture we can change it here
+// All endpoints in our application will be kept here and then we will export it from here.
+// This will bundle all the endpoints at one point here and in future we can change it here
 // We will import this file in our component and use it then 
 
 import axios from 'axios';
@@ -7,7 +8,7 @@ import axios from 'axios';
 // Create an instance of axios object.
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL, // http://localhost:5500/api/send-otp
-    withCredentials: true, // We enable this when we want to save cookie or we want to send cookiee with request. If this is false then it will not send the cookie on client and won't be able to save the cookiee on the client. This will enable us to see cookiee to store aour accessToken and refresh token
+    withCredentials: true, // We enable this when we want to save cookie or we want to send cookiee with request. If this is false then it will not send the cookie on client and won't be able to save the cookie on the client. This will enable us to see cookie to store our accessToken and refresh token
     headers: {
         'Content-type': 'application/json',
         Accept: 'application/json',// What type of data we can accept
@@ -15,12 +16,13 @@ const api = axios.create({
 })
 
 // List of all the endpoints
-export const sendOtp = (data) => api.post('/api/send-otp', data); // Since it a post method then we need to pass some data as well which we will receive it here when we call this endpoint from the component wwe will pass it from there
+export const sendOtp = (data) => api.post('/api/send-otp', data); // Since it a post method then we need to pass some data as well which we will receive it here when we call this endpoint from the component we will pass it from there
 export const verifyOtp = (data) => api.post('/api/verify-otp', data); // Take the data and verify the otp
-export const activate = (data) => api.post('/api/activate', data); // once the user has given it's name and the profile image upload those on the server using this url
-export const logout = () => api.post('/api/logout'); // once the user has given it's name and the profile image upload those on the server using this url
+export const activate = (data) => api.post('/api/activate', data); // once the user has given it's name and the profile image, upload those on the server using this url
+export const logout = () => api.post('/api/logout'); // 
 export const createRoom = (data) => api.post('/api/rooms', data); // create a room
 export const getAllRooms = () => api.get('/api/rooms'); // create a room
+export const getRoom = (roomId) => api.get(`/api/rooms/${roomId}`); 
 
 
 
@@ -29,8 +31,10 @@ export const getAllRooms = () => api.get('/api/rooms'); // create a room
 api.interceptors.response.use(// It you want to add something in the response header user interceptors.response.use then call the use by passing the two callback function 1st gives the config(Whole info about our req/res which ever is chained) and the 2nd err
     (config) => {
         return config;
-    }, 
+    },
+    
     async (error) => {
+        console.log(error);
         // We will store the original request in a variable, cuz another req will also go from here. So the first error that we want to repeat after the the token is refreshed shouldn't be harmed.
         const originalRequest = error.config; // Storing original request
         if(error.response.status === 401 && originalRequest && !originalRequest._isRetry) { // check if the error reponse status is 401 or not, error has config object or not, and config has attach isRetry. with isReTry we are checking if after 1 request the server again reponds with 401 that means our refreshToken has also expired and it will keep on getting the same status code again and again leading to infinite loop.
@@ -49,11 +53,9 @@ api.interceptors.response.use(// It you want to add something in the response he
             } catch(err) {
                 console.log(err.message);
             }
-            
-        
         }        
-    
-    }
-    
-) 
+        throw error;
+    } 
+);
+
 export default api;

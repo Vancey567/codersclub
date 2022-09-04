@@ -3,7 +3,6 @@ const path = require('path');
 const userService = require('../services/user-service')
 const UserDto = require('../dtos/user-dtos')
 
-
 class ActivateController {
     async activate(req, res) {
         // Activation Logic
@@ -25,7 +24,6 @@ class ActivateController {
             Math.random() * 1e9 // it 1e9 will generate 10^9 random number(billion)
         )}.png`; // will store it in png format
 
-
         // If we received the string in wrong format then we need to handle it else the server will crash
         try {
             const jimResp = await Jimp.read(buffer); // Jimp will read the buffer and it will create a object after reading the buffer
@@ -33,7 +31,7 @@ class ActivateController {
             .resize(150, Jimp.AUTO)  // width, height
             // .quality(60) // set JPEG quality
             // .greyscale() // set greyscale
-            .write(path.resolve(__dirname, `../storage/${imagePath}`));// call the resize() method by passing width and then height to it but we will keep the height as auto else the image aspect ratio. And on that resized image we will call the write() insside which we will pass path where we want the image to be stored/written. For that we will use the path module
+            .write(path.resolve(__dirname, `../storage/${imagePath}`));// call the resize() method by passing width and then height to it but we will keep the height as auto else the image aspect ratio. And on that resized image we will call the write() inside which we will pass path where we want the image to be stored/written. For that we will use the path module.
         } catch(err) {
             console.log(err);
             res.status(500).json({message: "Could not process the image"});
@@ -59,7 +57,6 @@ class ActivateController {
             console.log(err);
             res.status(500).json({message: "Something wnet wrong while storing user in the DB"});
         }
-
     }
 }
 

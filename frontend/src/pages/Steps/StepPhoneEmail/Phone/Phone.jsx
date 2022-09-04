@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Card from '../../../../components/shared/Card/Card';
 import Button from '../../../../components/shared/Button/Button';
 import TextInput from '../../../../components/shared/TextInput/TextInput';
-import { sendOtp } from '../../../../http/index';// Since we have exported only the otp endpoint and not the export default the entire file module there for we need to import the function inside {  }  
-import { useDispatch } from 'react-redux'; // 
-import { setOtp } from '../../../../store/authSlice';// Since we have exported only the otp endpoint and not the export default the entire file module there for we need to import the function inside {  }  
+import { sendOtp } from '../../../../http/index';// Since we have exported only the otp endpoint and not the export default the entire file module there for that we need to import the function inside {  }  
+import { useDispatch } from 'react-redux';
+import { setOtp } from '../../../../store/authSlice';
 
 import styles from './Phone.module.css';
 

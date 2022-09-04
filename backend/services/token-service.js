@@ -1,59 +1,121 @@
+// const jwt = require('jsonwebtoken');
+// const accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+// const refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
+// const refreshModel = require('../models/refresh-model')
+
+// class TokenService {
+
+//     generateTokens(payload) { // payload is basically the user data that we want to add in the token. We can pass user data like user id and activated field in the payload
+//         console.log(payload);
+//         const accessToken = jwt.sign(payload, accessTokenSecret, {
+//             expiresIn: '1m' // 1h means 1hour for banks it would be arounr 1min 2min represneted by 1m
+//         });
+
+//         // refreshtoken are used to generate new access Token automatically when the access token expires in 1 or 2 minutes
+//         const refreshToken = jwt.sign(payload, refreshTokenSecret, {
+//             expiresIn: '1y' // 1y means 1year
+//         });
+//         console.log("accessToken token is", accessToken);
+//         console.log("refresh token is", refreshToken);
+
+//         return { accessToken, refreshToken }
+//     }
+
+//     // Create a model to store refreshToken in the DB.
+//     async storeRefreshToken(token, userId) {
+//         try {
+//             await refreshModel.create({ // Import refreshModel on which we have a method called create which is used to create the model
+//                 token,
+//                 userId,
+//             })
+//         } catch(err) {
+//             console.log(err.message);
+//         }
+//     }
+
+//     async verifyAccessToken(token) {
+//         return jwt.verify(token, accessTokenSecret); // Since we are verifing the accessToken we will need to give the accessTokenSecret
+//     }
+
+//     async verifyRefreshToken(token) {
+//         return jwt.verify(token, refreshTokenSecret);
+//     }
+
+//     async findRefreshToken(userId, refreshToken) {
+//         return await refreshModel.findOne({
+//             userId: userId, // These _id and token feilds are inside DB
+//             token: refreshToken,
+//         })
+//     }
+
+//     async updateRefreshToken(userId, refreshToken) {
+//         return await refreshModel.updateOne( // pass the data to be updated first pass the id(To filter which document to be updated) then the data to be updated i.e. newly generated token 
+//             { userId: userId }, 
+//             { token: refreshToken }
+//         );
+//     }
+
+//     async deleteRefreshToken(refreshToken) {
+//         return await refreshModel.deleteOne({ token: refreshToken }); // if the token in DB is equals to the passed refreshToken then delet that refreshToken from the DB
+//     }
+// }
+
+// module.exports = new TokenService();
 const jwt = require('jsonwebtoken');
 const accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
-const refreshModel = require('../models/refresh-model')
-
-
+const refreshModel = require('../models/refresh-model');
 class TokenService {
-
-    generateTokens(payload) { // payload is basically the user data that we want to add in the token. We can pass user data like user id and activated field in the payload
+    generateTokens(payload) {
         const accessToken = jwt.sign(payload, accessTokenSecret, {
-            expiresIn: '1m' // 1h means 1hour for banks it would be arounr 1min 2min represneted by 1m
+            expiresIn: '1m',
         });
-
-        // refreshtoken are used to generate new access Token automatically when the access token expires in 1 or 2 minutes
         const refreshToken = jwt.sign(payload, refreshTokenSecret, {
-            expiresIn: '1y' // 1y means 1year
+            expiresIn: '1y',
         });
-        return { accessToken, refreshToken }
+        
+        // console.log(accessToken, refreshToken);
+        // console.log(accessTokenSecret, refreshTokenSecret);
+
+        return { accessToken, refreshToken };
     }
 
-    // Create a model to store refreshToken in the DB.
     async storeRefreshToken(token, userId) {
         try {
-            await refreshModel.create({ // Import refreshModel on which we have a method called create which is used to create the model
+            await refreshModel.create({
                 token,
                 userId,
-            })
-        } catch(err) {
+            });
+        } catch (err) {
+            console.log("Error While Storing Refresh Token")
             console.log(err.message);
         }
     }
 
     async verifyAccessToken(token) {
-        return jwt.verify(token, accessTokenSecret); // Since we are verifyin the accessToken we will need to give the accessTokenSecret
+        return jwt.verify(token, accessTokenSecret);
     }
 
-    async verifyRefreshToken(token) {
-        return jwt.verify(token, refreshTokenSecret); // Since we are verifyin the accessToken we will need to give the accessTokenSecret
+    async verifyRefreshToken(refreshToken) {
+        return jwt.verify(refreshToken, refreshTokenSecret);
     }
 
     async findRefreshToken(userId, refreshToken) {
         return await refreshModel.findOne({
-            userId: userId, // These _id and token feilds are inside DB
+            userId: userId,
             token: refreshToken,
-        })
+        });
     }
 
     async updateRefreshToken(userId, refreshToken) {
-        return await refreshModel.updateOne( // pass the data to be updated first pass the id(To filter which document to be updated) then the data to be updated i.e. newly generated token 
-            { userId: userId }, 
+        return await refreshModel.updateOne(
+            { userId: userId },
             { token: refreshToken }
         );
     }
 
-    async deleteRefreshToken(refreshToken) {
-        return await refreshModel.deleteOne({ token: refreshToken }); // if the token in DB is equals to the passed refreshToken then delet that refreshToken from the DB
+    async removeToken(refreshToken) {
+        return await refreshModel.deleteOne({ token: refreshToken });
     }
 }
 

@@ -22,10 +22,8 @@ function App() {
     <Loader message="Loading Please wait"/>
   ) : (
     <BrowserRouter> {/* Creating Router, BrowserRouter is present in react-router-dom library and we import it here*/} 
-
       <Navigation />  {/* Since Navigation is kept outside of <Switch> therefore it can be applied to all the pages/routes */}
-    
-      <Switch> {/* Any Routes inside <Swtch> is for many different pages. Switch terminate the further search if a url is matched. */}
+      <Switch> {/* Any Routes inside <Switch> is for many different pages. Switch terminate the further search if a url is matched. */}
         
         {/* Unprotected area */}
         <GuestRoute path="/" exact> {/* exact will ensure that any routes that comes after / is exact */}

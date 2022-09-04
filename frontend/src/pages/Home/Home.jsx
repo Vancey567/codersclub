@@ -7,7 +7,7 @@ import Button from '../../components/shared/Button/Button'
 
 
 const Home = () => {
-
+    
     // const signInLinkStyle = {
     //     color: '#0077ff',
     //     fontWeight: 'bold',

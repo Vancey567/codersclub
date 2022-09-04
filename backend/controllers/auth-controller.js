@@ -9,7 +9,7 @@ class AuthController {
     // Write logics here for routers end points
     async sendOtp(req, res) { // Its a method not function and we don't need to write function keyword before the sendOtp(){}
         const { phone } = req.body; // Get the phone number from body and destructuring it.
-        
+        // console.log(phone);
         if(!phone) {
             res.status(400).json({message: 'Phone number is required!'});
         }
@@ -17,7 +17,7 @@ class AuthController {
         // We need to generate a 4 digit random number to send it as otp
         // Node has a inbuilt module called CRYPTO which can be used for many things like hashing, sign, verify, cypher, decypher,
         // crypto.randomInt(1000, 9999) this will generate a randon 4 digit number under those range evertime this is called.
-        // Here we will be importing the servive layer(Js file only) which helps us to make our code modular
+        // Here we will be importing the service layer(Js file only) which helps us to make our code modular
         const otp = await otpService.generateOtp(); // This will return a promise
 
         // Now we need to hash the OTP because we will send the hashed OTP to the client. We will node store any OTP in our database
@@ -41,7 +41,7 @@ class AuthController {
             res.status(500).json({message: 'Message sending failed'});
         }
         // After sending the otp to the user we will send that otp to the server to verify and when this otp is varified on the server we will then only we will create the user and store it in the database.
-        res.json({hash: hash}); // We will send hash on to the client
+        // res.json({hash: hash}); // We will send hash on to the client
     }
 
     async verifyOtp(req, res) {
@@ -121,12 +121,17 @@ class AuthController {
     async refresh(req, res) {
         // 1. Get refresh token from header
         const {  refreshToken: refreshTokenFromCookie } = req.cookies; // refreshTokenFromCookie is a alias for refreshToken to avoaid name conflict
-
+        
+        console.log("Refresh Token", refreshTokenFromCookie);
         // 2. Check if token is valid
         let userData;
+        
         try {
+            // console.log(tokenService);
+            // console.log(verifyRefreshToken)
             userData = await tokenService.verifyRefreshToken(refreshTokenFromCookie);
         } catch(err) {
+            console.log("From refresh token")
             console.log(err);
             return res.status(401).json({ message: "Invalid token" });
         }
@@ -164,11 +169,13 @@ class AuthController {
         res.cookie('refreshToken', refreshToken, { 
             maxAge: 1000 * 60 * 60 * 24 * 30, 
             httpOnly: true, // this is the type of the cookie.
+            domain: 'localhost',
         }) 
 
         res.cookie('accessToken', accessToken, { 
             maxAge: 1000 * 60 * 60 * 24 * 30, 
             httpOnly: true,
+            domain: 'localhost',
         })
 
         // 8. send Response on the client.
@@ -181,7 +188,8 @@ class AuthController {
         const { refreshToken } = req.cookies;
 
         // 2. delete that refreshToken from DB
-        await tokenService.deleteRefreshToken(refreshToken);
+        // await tokenService.deleteRefreshToken(refreshToken);
+        await tokenService.removeToken(refreshToken);
 
         // 3. delete that cookies from DB
         res.clearCookie('refreshToken'); // res has this clearCookie() method inside which we need to pass the key of the cookie(here refreshToken and accessToken) to clear/delete the cookkie
