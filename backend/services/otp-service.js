@@ -22,8 +22,6 @@ class OtpService {
     }
 
     async verifyOtp(hashedOtp, newData) {
-        console.log("hashedOtp", hashedOtp);
-        console.log("newData", newData);
         let computedHash = hashService.hashOtp(newData); // This is the new hash that we will create now
         return computedHash === hashedOtp;// If both the earlier hasedOtp and newly computedHash are equal then return true else return false and this code will do that. 
     }

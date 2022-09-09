@@ -19,12 +19,11 @@ const Home = () => {
 
     function startRegister() {
         history.push('/authenticate'); // Push it on /register route when this function is called.
-        console.log("Hey");
     }
 
     return (
         <div className={styles.cardWrapper}>
-            <Card title="Welcome to Codersclub!" icon="logo"> 
+            <Card title="Welcome to Codersclub!" icon="logo">
                 <p className={styles.text}>
                     We're wroking hard to get Coderclub ready for everyone! While we wrap up the finishing youches, we're adding people gradually to make sure nothing breaks.
                 </p>

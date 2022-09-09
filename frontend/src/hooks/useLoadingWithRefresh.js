@@ -13,14 +13,12 @@ export function useLoadingWithRefresh() {
                 const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/refresh`, { withCredentials: true }); // generate and get the new tokens. we will send the cookie as well and it will get the response in return. Inside reponse we have data so we will get the data from res.data by destructuring it in data. 
                 dispatch(setAuth(data)); // the data we will receive will be stored in the store inside setAuth inside which we have teh isAuth property which will be marked true. And the data will have the user data as well send from auth-controller.js as response.
                 setLoading(false); // Since we have received the data set the loading as false. 
-                // console.log(data);
             } catch (err) {
                 console.log(err);
                 setLoading(false); // even if we have the error then also we need to remove the loading sign from screen.
             }
         })();
     }, []);
-    // })
 
     return { loading }; // We need to return something (object here) from the hook. Here "loading" is the variable and when this hook variable will get called it will
 }

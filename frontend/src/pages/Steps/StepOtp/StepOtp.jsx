@@ -27,7 +27,6 @@ const StepOtp = () => { // removed from function: { onNext }
             // We will be passing the otp which is stored in our local state, phone and hash which are stored in our "Store". 
             // We need to fetch our store here that we have created using redux-toolkit. To fetch the "store" here we need to import a hook named useSelector which is inside react-redux.
             const { data } = await verifyOtp({otp, phone, hash }); // This will return our tokens which we will store in data variable by destrcturing it. 
-            console.log(data)
             dispatch(setAuth(data));
             // onNext()
         } catch (err) {

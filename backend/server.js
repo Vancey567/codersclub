@@ -65,7 +65,6 @@ io.on('connection', (socket) => { // we will get info about current socket that 
             socket.emit(ACTIONS.ADD_PEER, {
                 peerId: clientId, // who all are going to connect we will send there id on each iteration
                 createOffer: true, // telling other to create there offers
-                // user: socketUsermapping[clientId] // we are sending this to all the users in the room from socketUserMapping using clientId. 
                 user: socketMapping[clientId] // we are sending this to all the users in the room from socketUserMapping using clientId. 
             });
         });
@@ -112,8 +111,21 @@ io.on('connection', (socket) => { // we will get info about current socket that 
          })
     });
 
+    socket.on(ACTIONS.MUTE_INFO, ({ userId, roomId, isMute }) => {
+        const clients = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
+        clients.forEach((clientId) => {
+            if (clientId !== socket.id) {
+                console.log('mute info');
+                io.to(clientId).emit(ACTIONS.MUTE_INFO, {
+                    userId,
+                    isMute,
+                });
+            }
+        });
+    });
+
     // *** Handle Leaving the room ***
-    const leaveRoom = ({roomId}) => { // jab v user leave karega to jitne v room me user hai sabse use leave kar denge
+    const leaveRoom = () => { // jab v user leave karega to jitne v room me user hai sabse use leave kar denge
         // Jab v page leave karenge tab hame
         const {rooms} = socket; // get all the rooms
 
@@ -124,17 +136,17 @@ io.on('connection', (socket) => { // we will get info about current socket that 
             ); // get all the clients, agar rooms nahi hai to empty array return kardo
 
             // sare cleints pe loop lagao, aur wo bolega har ek client se mujhe nikalo
-            clients.forEach(clientId => { 
+            clients.forEach((clientId) => { 
                 io.to(clientId).emit(ACTIONS.REMOVE_PEER, { // inn clients ko bhej dia ki mujhe nikal do. lekin utni hi baar REMOVE_PEER trigger karna parega so that inn clients ko apne client se nikal du
                     peerId: socket.id, // send the data
                     userId: socketMapping[socket.id]?.id,
                 });
 
                 // remove yourself as well your clients as well
-                socket.emit(ACTIONS.REMOVE_PEER, {
-                    peerId: clientId,
-                    userId: socketMapping[clientId]?.id,
-                });
+                // socket.emit(ACTIONS.REMOVE_PEER, {
+                //     peerId: clientId,
+                //     userId: socketMapping[clientId]?.id,
+                // });
             });
             socket.leave(roomId)
         });

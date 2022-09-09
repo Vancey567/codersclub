@@ -9,7 +9,6 @@ class AuthController {
     // Write logics here for routers end points
     async sendOtp(req, res) { // Its a method not function and we don't need to write function keyword before the sendOtp(){}
         const { phone } = req.body; // Get the phone number from body and destructuring it.
-        // console.log(phone);
         if(!phone) {
             res.status(400).json({message: 'Phone number is required!'});
         }
@@ -34,7 +33,7 @@ class AuthController {
             res.json({
                 hash: `${hash}.${expires}`, // We will send a hash. The expires time will be extracted
                 phone: phone,
-                otp
+                // otp  // we don't want to send the otp in response to display in console
             });
         } catch(err) {
             console.log(err);
@@ -92,7 +91,6 @@ class AuthController {
         // Before storing the refresh token into the cookie we will the refresh token in the DB
         await tokenService.storeRefreshToken(refreshToken, user._id)
 
-        // console.log(`accessToken: ${accessToken}, refreshToken: ${refreshToken}`);
         // Now we will attach this refreshToken to the cookie which will be http only i.e client pe hamara JS read nahi kar payega.
         // Cookie feature is that it gets attach to request on every request. So we don't need to send the refreshToken on every request manually if we store it inside the cookie. Our frontend will automatically send the refreshToken on every request with the cookie.
         // Many a times accessToken are also stored in the cookie.
@@ -122,13 +120,11 @@ class AuthController {
         // 1. Get refresh token from header
         const {  refreshToken: refreshTokenFromCookie } = req.cookies; // refreshTokenFromCookie is a alias for refreshToken to avoaid name conflict
         
-        console.log("Refresh Token", refreshTokenFromCookie);
+        // console.log("Refresh Token", refreshTokenFromCookie);
         // 2. Check if token is valid
         let userData;
         
         try {
-            // console.log(tokenService);
-            // console.log(verifyRefreshToken)
             userData = await tokenService.verifyRefreshToken(refreshTokenFromCookie);
         } catch(err) {
             console.log("From refresh token")
