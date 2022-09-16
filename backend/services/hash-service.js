@@ -13,4 +13,22 @@ class HashService {
 
 module.exports = new HashService();
 
-// You can use crypto.randomBytes(64).toString('hex') to generate a random string for secret
+// we can use crypto.randomBytes(64).toString('hex') to generate a random string for secret
+
+
+
+
+
+
+// const crypto = require('crypto');
+
+// class HashService {
+//     hashOtp(data) { // The data/OTP which we want to hash is received here
+//         return crypto.createHmac('sha256', process.env.HASH_SECRET).update(data).digest('hex'); // It will generate and return the hashed value
+//     }
+// }
+
+// module.exports = new HashService();
+
+
+

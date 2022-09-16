@@ -11,7 +11,8 @@ RUN apt update -y \
     && apt install nginx curl vim -y \
     && apt-get install software-properties-common -y \
     # && add-apt-repository ppa:certbot/certbot -y \
-    && apt-add-repository -r ppa:certbot/certbot -y \
+    # && curl -o- https://raw.githubusercontent.com/vinyll/certbot-install/master/install.sh | bash \
+    # && apt-add-repository -r ppa:certbot/certbot -y \
     && apt-get update -y \
     && apt-get install python3-certbot-nginx -y \
     && apt-get clean

@@ -24,7 +24,7 @@ const Phone = ({ onNext }) => {
         dispatch(
             setOtp({ // setOtp is the action that we have imported from authSlice.js inside the reducers. We are calling that action and passing the data from here to the store where we will be storing the data inside setOtp.
                 phone: data.phone, // passing the data to setOtp inside authSlice.js. These data will be available to us inside action.payload payload has the data
-                hash: data.hash
+                hash: data.hash,
             })
         );
         onNext();
