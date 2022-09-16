@@ -11,9 +11,9 @@ RUN apt update -y \
     && apt install nginx curl vim -y \
     && apt-get install software-properties-common -y \
     # && add-apt-repository ppa:certbot/certbot -y \
-    && apt-add-repository -r ppa:certbot/certbot -y \
+    && sudo apt-add-repository -r ppa:certbot/certbot -y \
     && apt-get update -y \
-    && apt-get install python-certbot-nginx -y \
+    && sudo apt-get install python3-certbot-nginx -y \
     && apt-get clean
 
 EXPOSE 80
